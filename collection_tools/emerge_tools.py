@@ -5,9 +5,9 @@ EMERGE_AIRDROP_ID ="af426e96-1594-4d83-98f5-c0f56d97c012"
 EMERGE_HAND_ID = "5f8165ff-3532-451d-9b42-2b413537773f"
 EMERGE_LIST = [EMERGE_COL_ID, EMERGE_AIRDROP_ID, EMERGE_HAND_ID]
 
-def get_emerge_nfts():
-    for nft in EMERGE_LIST:
-        s
+# def get_emerge_nfts():
+#     for nft in EMERGE_LIST:
+#         s
 def get_holders_at_time_for_nft(nftId, timestamp):
 
     db = nifty.NiftyDB()
@@ -160,7 +160,10 @@ def plot_price_history_emerge(nft_id, usd=True, save_file=False, bg_img=None, pl
         name = nft_data['name']
     else:
         y = json.loads(nft_data['attributes'])
-        y = y[1]
+        try:
+            y = y[1]
+        except:
+            y = y[0]
         y = y.get("value")
         name = nft_data['name'] + ' - ' + str(y)
     fig.update_layout(xaxis=dict(domain=[0, 0.90], titlefont=plotly_axis_font, tickfont=plotly_axis_font),

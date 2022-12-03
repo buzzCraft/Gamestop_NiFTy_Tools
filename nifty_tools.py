@@ -9,7 +9,7 @@ from PIL import Image
 import networkx as nx
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
 from xlsxwriter import Workbook
-
+import time
 import gamestop_api
 import loopring_api as loopring
 import discord_api as discord
@@ -24,6 +24,9 @@ from collection_tools.loopingu_tools import *
 
 import nifty_database as nifty
 
+API_HEADERS = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
+}
 
 plotly_title_font = dict(
     color="White",
@@ -227,7 +230,15 @@ def grab_new_blocks(find_missing=False, find_new_users=True):
     def get_total_nfts(collection):
         if collection['layer'] == "Loopring":
             api_url = f"https://api.nft.gamestop.com/nft-svc-marketplace/getCollectionStats?collectionId={collection['collectionId']}"
-            response = requests.get(api_url).json()
+            response = requests.get(api_url, headers=API_HEADERS)
+            if response.status_code == 403:
+                time.sleep(1)
+                response = requests.get(api_url)
+            try:
+                response = response.json()
+            except:
+                print(response)
+
             collection['itemCount'] = response['itemCount']
         return collection
 
