@@ -120,6 +120,7 @@ def morning_routine():
     EVA_EVA = "d1b7b3fd-dc44-495b-af14-4bf8d72a8b1b"
     EVA_NATE = "0cd5edc0-ed69-4b12-8029-8bb7d9328862"
     KIRA_TREE = 	"7ffa3d1a-8d57-44a5-96ce-78842257f10b"
+    KIRA_CAN = "59f067fa-2e8b-483d-92c2-262535b5ce42"
 
     # Emerge
     time = datetime.now()
@@ -127,15 +128,27 @@ def morning_routine():
     emerge.emerge_data(total_holders=True, show=False, subfolder="Emerge")
 
     # Thedholes
+    Ikar = NftCollection(collectionID=th.TH_IKARUS_ID)
+    # Scrap the nft_id from the collection
+    Ikar.get_collection_nfts(limit=Ikar.get_item_count())
+    th.get_holders_for_list_at_time(Ikar.get_nftId_list(), time, file_name="Ikarus")
+
     combolist = th.TH_LIST
+    combolist.extend(Ikar.get_nftId_list())
     subfolder = "ThedHoles"
     print("Starting ThedHoles")
-    th.get_holders_for_list_at_time(combolist, time)
+    th.get_holders_for_list_at_time(combolist, time, file_name="ThedHoles")
     th.get_subscription_count(combolist, time)
     plot_eth_volume(combolist, [1, 7, 0], save_file=True, show_fig=False, file_name="ThedHolesEthHist",
                     subfolder=subfolder)
     for e in combolist:
         plot_price_history(e, usd=False, show_fig=False, save_file=True, plt_current_floor=True, subfolder=subfolder)
+    Ikar = NftCollection(collectionID=th.TH_IKARUS_ID)
+    # Scrap the nft_id from the collection
+    Ikar.get_collection_nfts(limit=Ikar.get_item_count())
+    th.get_holders_for_list_at_time(Ikar.get_nftId_list(), time, file_name="Ikarus")
+
+
     #
     # Engwind
 
@@ -144,7 +157,7 @@ def morning_routine():
     data_drop(S_s, show=False, subfolder="Engwind\\space")
     print("Starting Kira")
     # Kira
-    combolist = [EVA_NATE, EVA_EVA, EVA_VESSEL, KIRA_TREE]
+    combolist = [EVA_NATE, EVA_EVA, EVA_VESSEL, KIRA_TREE, KIRA_CAN]
     subfolder = "Kira"
     plot_eth_volume(combolist, [1, 7, 0], save_file=True, show_fig=False, subfolder=subfolder,
                     file_name="EVA_and_Nate_Eth_Volume")
@@ -195,11 +208,16 @@ def inequity():
     data_drop(inequity_air, show=False, subfolder="inequity_air")
     data_drop(inequity, show=False, subfolder="inequity")
 
+def domi():
+    DOMI = "2f4d469c-2128-475c-8c53-4a2020689cc9"
+    data_drop(DOMI, show=False, subfolder="Domi")
+
 
 
 if __name__ == '__main__':
 
     grab_new_blocks()
+    # domi()
     morning_routine()
     # # data_drop(PLS_COLLECTION_ID, show=False, subfolder="PLS")
 

@@ -258,7 +258,7 @@ def grab_new_blocks(find_missing=False, find_new_users=True):
 
 
 
-def plot_price_history(nft_id, save_file=False, bg_img=None, plot_floor_price=False, usd=True, limit_volume=True, show_fig=True, subfolder=None, plt_current_floor = False):
+def plot_price_history(nft_id, save_file=False, bg_img=False, plot_floor_price=False, usd=True, limit_volume=True, show_fig=True, subfolder=None, plt_current_floor = False):
 
     """
     Plots the price history of a given NFT
@@ -314,7 +314,7 @@ def plot_price_history(nft_id, save_file=False, bg_img=None, plot_floor_price=Fa
                       annotation_position="bottom left")
 
     if bg_img:
-        bg_img = Image.open(f'images\\{bg_img}.png')
+        bg_img = Image.open(f'images\\{bg_img}')
         fig.add_layout_image(
             dict(
                 source=bg_img,
@@ -1794,103 +1794,7 @@ def print_1of1_collection_nft_owners(collectionId, filter_accountId=None):
 
 
 
-
-
 if __name__ == "__main__":
-
-    #grab_new_blocks()
-    #Nft("6e34d003-d94d-4ced-bf23-5d62b7d322ba")
-    #pull_usernames_from_transactions(blockId=24340)
-
-    #find_silver_saffron()
-    #find_loopingu_sets()
-
-
-    """
-    gs = GamestopApi()
-    db = nifty.NiftyDB()
-    new_collection_found = False
-    collections = gs.get_collections()
-    print()
-    for collection in collections:
-        if collection['layer'] == "Loopring":
-            col = NftCollection(collection['collectionId'], get_collection_nfts=True)
-    """
-
-    """
-    nftdata = "0x1037be489e086b2e4b2d749deccaa62cf17a99d6a481165fa4d30784b4d2daf9"
-    lr = loopring.LoopringAPI()
-    num_pending = 0
-    pending_tx = lr.get_pending(transfers = False, mints=False)['transactions']
-    for tx in pending_tx:
-        if tx['orderA']['nftData'] == nftdata:
-            if tx['orderB']['accountID'] == 177969 or tx['orderB']['accountId'] == 177970:
-                num_pending += int(tx['orderA']['amountB'])
-
-    print(f"{num_pending} pending")
-
-    nf = nifty.NiftyDB()
-    past_tx = nf.get_nft_transactions(nftdata)
-    for tx in past_tx:
-        if tx['txType'] == "SpotTrade" and tx['sellerAccount'] == 177969:
-            num_pending += tx['amount']
-
-    print(f"{num_pending} total")
-    print(f"{3333 - 2222 - 531 - num_pending} remaining")
-    """
-
-    #dump_detailed_orderbook_and_holders(['b241329a-f015-4481-b926-850303d764b2'], "PLSTY Birthday")
-
-
-    #print_users_holdings_report([91727], "91727")
-    #dump_detailed_orderbook_and_holders(PLS_LIST+PLS_PASS_LIST, "PLSTY Owner List and Orderbook", limit=3)
-    #find_complete_collection_owners()
-    #print_user_collection_ownership([PLS_PURPLE_DREAM, PLS_PURPLE_DREAM_2, PLS_PURPLE_DREAM_3, PLS_PURPLE_DREAM_STILL, PLS_SPECIAL])
-    #user = User(address="0xbe7bda8b66acb5159aaa022ab5d8e463e9fa8f7e")
-    #print(user.get_nft_number_owned(Nft(CC_CYBER_CYCLE).get_nft_data(), use_lr=True))
-
-    #NftCollection(MB_COLLECTION_ID, get_collection_nfts=True)
-    #lr = loopring.LoopringAPI()
-    #print(lr.get_block(28000))
-    #print(lr.get_pending(transfers=False, mints=False))
-    #print(lr.get_block(24412))
-    #collection = NftCollection(BOOP_COLLECTION_ID)
-    #collection.get_collection_nfts()
-
-    #print(lr.filter_nft_txs(24419))
-    #print_single_collection_nft_owners("a5085ce8-ae23-4d41-b85e-cdb3ee33ebea", filter_accountId=82667)
-    #dump_detailed_orderbook_and_holders([PLS_OCEAN_CELEBRATION], "Neon Ocean Celebration Owner List")
-
-    #nf = nifty.NiftyDB()
-    #owner = nf.get_last_buyer_for_nft("0x2b1ad18da9fbad41b8e8ad00b709daa6622dc600ac717c239aa4107cd5b2ede7")
-    #print(f"Last buyer: {owner['username']} ({owner['accountId']}) - {owner['address']}")
-
-    #find_cc_and_mb_owners()
-    #find_cc_and_kiraverse_owners()
-    #find_cc_owners()
-    #print_user_collection_ownership(PLS_PD_LIST+PLS_PASS_LIST)
-    #print_plsty_collection_ownership()
-
-    #for nft in CC_C4_2_LIST:
-    #    Nft(nft)
-    #find_complete_owners(MB_ONLY_LIST, "MB Complete Collection Owners")
-
-    #find_cc_c4_pt2_transactions()
-    #find_loopingu_owners()
-    #find_complete_owners([LOOPINGU_LEGACY_SAMURAI_CYCLE, LOOPINGU_LEGACY_CYBORG_CYCLE], "Loopingu Cycle")
-    #find_complete_owners([LOOPINGU_LEGACY_TRACKSUIT, LOOPINGU_LEGACY_TRACKSUIT2, LOOPINGU_LEGACY_TRACKSUIT3], "Loopingu Tracksuit")
-    #find_complete_owners(CC_LIST+CC_CLAW_LIST+CC_CELEBRATION_LIST+CC_AIRDROP_LIST, "CC Complete Owners")
-    #find_complete_owners(CC_C4_LIST, "CC 7 of 7 Complete Owners")
-    #find_complete_owners(CC_C4_LIST+CC_C4_2_LIST, "CC 16 of 16 Complete Owners")
-    #find_complete_owners(CC_LIST)
-    #find_complete_owners(CC_LIST+CC_CELEBRATION_LIST)
-    #find_complete_owners(KIRAVERSE_LIST, "Kiraverse Complete Collection Owners")
-    #find_complete_owners(MB_ONLY_LIST, "MB Complete Collection Owners")
-    #plot_returns_since_mint(CC_LIST, "Cyber Crew Returns Since Mint")
-    #print_plsty_collection_ownership()
-    #print_users_holdings_report([User(address="0x17e84bbf4248827df386fe3305bcdfc54c80575f").accountId], output_filename="H4SR")
-    #print_users_holdings_report([User(address="0x3242d7C33f744a9530cCa749ea8afE20799CE64D").accountId], output_filename="George")
-    #print(print_users_holdings_report([User(address="0x3242d7C33f744a9530cCa749ea8afE20799CE64D").accountId]), "George Loopingu")
-    #generate_cc_airdrop_list(4, 5000, 'card_holders_airdrop_snapshot_10-5-22.xlsx')
-    #generate_cc_airdrop_list(4, 5000, 'clone_holders_airdrop_snapshot_10-5-22.xlsx')
-    pass
+    user = User(address="0x079073fb29f456d74ab5f49d7106e378205a346b", get_nfts=True)
+    print("x")
+    # print_users_holdings_report(["0x079073fb29f456d74ab5f49d7106e378205a346b"])

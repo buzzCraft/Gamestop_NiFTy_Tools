@@ -11,10 +11,12 @@ TH_TRYPO = "c88f4160-d5db-471b-84d7-39d906e518b3"
 TH_HEELECTRA = "08ad3dfb-7052-4b09-8f1b-10e81b6b619c"
 CC_KiX = "ff603bac-0454-485e-a590-4137f93b02cc"
 TH_PIXI = "605aa20f-ad1a-4d2e-b900-81e54b5ac655"
+TH_TITA = "330068bf-e968-479c-9924-7cc4cb6a3995"
 B2K_HEAD = "a6315b54-701f-4ab0-824f-825ef767b5ac"
 TH_SHARP = "2355e0a9-a95c-4541-8b65-31088c080e0f"
 TH_DOUB = "a0adc1fb-d9d1-41c6-b48c-fc6ecd75d56e"
-TH_LIST = [TH_FAKE_HEELS,TH_CYPHER,TH_TRYPO,TH_DRACPNYA,TH_KOSTIKA,TH_BALEXX, TH_HEELECTRA, TH_PIXI, TH_SHARP, CC_KiX, B2K_HEAD,TH_DOUB]
+TH_IKARUS_ID = "8181b540-2405-45b2-99be-4e5663f43aab"
+TH_LIST = [TH_FAKE_HEELS,TH_CYPHER,TH_TRYPO,TH_DRACPNYA,TH_KOSTIKA,TH_BALEXX, TH_HEELECTRA, TH_PIXI, TH_SHARP, CC_KiX, TH_TITA, B2K_HEAD,TH_DOUB]
 
 def print_user_collection_ownership_TH(nftId_list):
     nf = nifty.NiftyDB()
@@ -121,7 +123,7 @@ def get_holders_at_time_for_nft(nftId, timestamp):
     return [holders_purged, nft.data["name"]]
 
 
-def get_holders_for_list_at_time(nft_id_list, time, filename="none", export_to_excel=True, get_df=False):
+def get_holders_for_list_at_time(nft_id_list, time, file_name="none", export_to_excel=True, get_df=False):
 
     """
     Take a list of nft_id, and a datetime object and calculate
@@ -163,7 +165,7 @@ def get_holders_for_list_at_time(nft_id_list, time, filename="none", export_to_e
             # Create a new directory because it does not exist
             os.makedirs(path)
 
-        df.to_excel(path + f'{filename} {timestamp}.xlsx')
+        df.to_excel(path + f'{file_name} {timestamp}.xlsx')
     elif get_df:
         return df
 
@@ -210,6 +212,7 @@ if __name__ == "__main__":
     grab_new_blocks(find_new_users=True)
     time = datetime.now()
     combolist = TH_LIST
+    combolist.extend(TH_LIST2)
     # # plot_tier_list(TH_LIST, 10)
     # # plot_tier_list(Nft_list=TH_LIST, days = 3)
     get_holders_for_list_at_time(combolist, time)
@@ -218,4 +221,8 @@ if __name__ == "__main__":
     for e in combolist:
         plot_price_history(e, usd=False, save_file=True)
 
-    #
+    # Generate snapshot for nft_id_list at time = time
+    Ikar = NftCollection(collectionID=TH_IKARUS_ID)
+    # Scrap the nft_id from the collection
+    Ikar.get_collection_nfts(limit=Ikar.get_item_count())
+

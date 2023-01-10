@@ -3,7 +3,8 @@ from datetime import timezone
 EMERGE_COL_ID = "c25eef26-3183-4e15-abc5-be6aa44d9345"
 EMERGE_AIRDROP_ID ="af426e96-1594-4d83-98f5-c0f56d97c012"
 EMERGE_HAND_ID = "5f8165ff-3532-451d-9b42-2b413537773f"
-EMERGE_LIST = [EMERGE_COL_ID, EMERGE_AIRDROP_ID, EMERGE_HAND_ID]
+EMERGE_WORLDS_ID = "eef1edef-25bb-4b37-88cc-7a503c813182"
+EMERGE_LIST = [EMERGE_COL_ID, EMERGE_AIRDROP_ID, EMERGE_HAND_ID,EMERGE_WORLDS_ID]
 
 # def get_emerge_nfts():
 #     for nft in EMERGE_LIST:
@@ -38,8 +39,30 @@ def get_holders_at_time_for_nft(nftId, timestamp):
         # Remove holders with 0 balance
         holders_purged = {k: v for k, v in holders.items() if v > 0}
 
+    guild = None
+    # Check if the key "Guild" is in the dictionary
+    attr = nft.data["attributes"]
+    # Check if guild is in attributes
+    for a in attr:
+        if a["trait_type"] == "Guild":
+            guild = a["value"]
+            break
+    if guild is None:
+        # Check for Class instead
+        for a in attr:
+            if a["trait_type"] == "Class":
+                guild = a["value"]
+                break
+    # Check if trait_type is Guild for each of the dict in the list attr
+    # guild = [x for x in attr if x["trait_type"] == "Guild"][0]["value"]
+    if guild is not None:
+        name = f'{nft.data["name"]} {guild}'
+    else:
+        name = f'{nft.data["name"]}'
 
-    return [holders_purged, nft.data["name"]]
+
+
+    return [holders_purged, name]
 
 
 def get_holders_for_list_at_time(nft_id_list, time, filename="none", export_to_excel=True, get_df=False):
@@ -87,6 +110,8 @@ def get_holders_for_list_at_time(nft_id_list, time, filename="none", export_to_e
         df.to_excel(path + f'{filename} {timestamp}.xlsx')
     elif get_df:
         return df
+
+
 
 def get_time_from_timestamp(timestamp):
     return datetime.fromtimestamp(t, tz=timezone.utc)
@@ -160,11 +185,14 @@ def plot_price_history_emerge(nft_id, usd=True, save_file=False, bg_img=None, pl
         name = nft_data['name']
     else:
         y = json.loads(nft_data['attributes'])
-        try:
-            y = y[1]
-        except:
-            y = y[0]
-        y = y.get("value")
+        if len(y) > 0:
+            try:
+                y = y[1]
+            except:
+                y = y[0]
+            y = y.get("value")
+        else:
+            y = ""
         name = nft_data['name'] + ' - ' + str(y)
     fig.update_layout(xaxis=dict(domain=[0, 0.90], titlefont=plotly_axis_font, tickfont=plotly_axis_font),
                       yaxis=dict(title="Price (ETH)", side="right", position=0.90,
@@ -200,6 +228,8 @@ def emerge_data(total_holders = True, show = True, time = datetime.now(), subfol
     xlabel.get_collection_nfts(limit=xlabel.get_item_count())
     airdrop = NftCollection(collectionID=EMERGE_AIRDROP_ID)
     airdrop.get_collection_nfts(limit=airdrop.get_item_count())
+    worlds = NftCollection(collectionID=EMERGE_WORLDS_ID)
+    worlds.get_collection_nfts(limit=worlds.get_item_count())
 
     for nft in col.get_nftId_list():
         plot_price_history_emerge(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
@@ -207,15 +237,19 @@ def emerge_data(total_holders = True, show = True, time = datetime.now(), subfol
         plot_price_history_emerge(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
     for nft in xlabel.get_nftId_list():
         plot_price_history(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
+    for nft in worlds.get_nftId_list():
+        plot_price_history(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
     print("Start exporting holders list")
     if total_holders:
         combo = col.get_nftId_list() + airdrop.get_nftId_list()
         get_holders_for_list_at_time(nft_id_list=combo, time=time, filename="Emerge Collection Ownership")
         get_holders_for_list_at_time(nft_id_list=xlabel.get_nftId_list(), time=time, filename="Emerge Xlabel Ownership")
+        get_holders_for_list_at_time(nft_id_list=worlds.get_nftId_list(), time=time, filename="Emerge Worlds Ownership")
     else:
         get_holders_for_list_at_time(nft_id_list=col.get_nftId_list(), time=time, filename="Emerge Collection Ownership")
         get_holders_for_list_at_time(nft_id_list=airdrop.get_nftId_list(), time=time, filename="Emerge Airdrop Ownership")
         get_holders_for_list_at_time(nft_id_list=xlabel.get_nftId_list(), time=time, filename="Emerge Xlabel Ownership")
+        get_holders_for_list_at_time(nft_id_list=worlds.get_nftId_list(), time=time, filename="Emerge Worlds Ownership")
 
 # def data_drop(collection_id, show = True):
 #     col = NftCollection(collectionID=collection_id)
