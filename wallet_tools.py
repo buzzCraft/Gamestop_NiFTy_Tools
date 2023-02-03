@@ -292,12 +292,12 @@ if __name__ == "__main__":
     LOS = "0xc651a1ddbe7f7a4fefdf154d564d9533d60c31b2"
     EME = "0x6128c7d0231b0c3531c25db51611e5e71cc36971"
     T = "0xda4cf25af5551459234cf48044610f23d3e66ca8"
-    grab_new_blocks(find_new_users=True)
+    # grab_new_blocks(find_new_users=True)
     time = datetime.now()
     generate_wallet_report(RAC)
 
 
 
-#TODO: Add value transferred out/in
+#TODO: Add value transferre+d out/in
 #TODO: When transfering out, substract avrage price from bought value
 #TODO: Add fees and royalties

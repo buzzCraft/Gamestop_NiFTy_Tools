@@ -108,11 +108,11 @@ def get_nft_id_list_from_collection(collection_id):
 
 def run():
     REBORN = "2f4d469c-2128-475c-8c53-4a2020689cc9"
-    DOMI2D = "4ba84ceb-ce77-4256-bf46-44d92c12c2d4"
-    REBORN2 = "57a9b61b-4458-4eab-a856-86859df9c84c"
+    # DOMI2D = "4ba84ceb-ce77-4256-bf46-44d92c12c2d4"
+    # REBORN2 = "57a9b61b-4458-4eab-a856-86859df9c84c"
 
     nft_id_list = []
     nft_id_list.extend(get_nft_id_list_from_collection(REBORN))
-    nft_id_list.extend(get_nft_id_list_from_collection(DOMI2D))
-    nft_id_list.extend(get_nft_id_list_from_collection(REBORN2))
+    # nft_id_list.extend(get_nft_id_list_from_collection(DOMI2D))
+    # nft_id_list.extend(get_nft_id_list_from_collection(REBORN2))
     get_holders_for_list_at_time(nft_id_list, datetime.datetime.now(), filename="DomiTotal", export_to_excel=True, get_df=False)

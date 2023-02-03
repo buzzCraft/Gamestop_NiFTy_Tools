@@ -12,7 +12,8 @@ import collection_tools.plsty_tools as plsty
 # col.get_collection_nfts(limit=col.get_item_count())
 # plot_eth_volume(col.get_nftId_list(), [1, 7, 0], save_file=True, show_fig=False, file_name="EVA_and_Nate_Eth_Volume")
 #
+
 # grab_new_blocks()
-# emerge.emerge_data(total_holders=True, show=False, subfolder="Emerge")
-do.run()
+boop.run()
+# do.run()
 

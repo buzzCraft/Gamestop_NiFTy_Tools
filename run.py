@@ -131,10 +131,15 @@ def morning_routine():
     Ikar = NftCollection(collectionID=th.TH_IKARUS_ID)
     # Scrap the nft_id from the collection
     Ikar.get_collection_nfts(limit=Ikar.get_item_count())
-    th.get_holders_for_list_at_time(Ikar.get_nftId_list(), time, file_name="Ikarus")
+
+    Vevlvet = NftCollection(collectionID=th.TH_VELVET_ID)
+    # Scrap the nft_id from the collection
+    Vevlvet.get_collection_nfts(limit=Vevlvet.get_item_count())
+    th.get_holders_for_list_at_time(Vevlvet.get_nftId_list(), time, file_name="Ikarus")
 
     combolist = th.TH_LIST
     combolist.extend(Ikar.get_nftId_list())
+    combolist.extend(Vevlvet.get_nftId_list())
     subfolder = "ThedHoles"
     print("Starting ThedHoles")
     th.get_holders_for_list_at_time(combolist, time, file_name="ThedHoles")
@@ -219,6 +224,7 @@ if __name__ == '__main__':
     grab_new_blocks()
     # domi()
     morning_routine()
+
     # # data_drop(PLS_COLLECTION_ID, show=False, subfolder="PLS")
 
 
