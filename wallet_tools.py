@@ -207,7 +207,7 @@ def generate_wallet_report(address):
 
         # For each row in the filtered trade list, add the price to the paid column
         for id, ro in new.iterrows():
-
+            minter = ""
             col_name = ro['collection']
             minter = ro['creator']
             if ro["type"] == 'spot trade' and ro["buyer"] == user.username:
@@ -282,6 +282,7 @@ def get_user_holding(user):
 
 if __name__ == "__main__":
     # nf = db.NiftyDB()
+
     RAC = "0xc6cf45a9e87f5732f329882ddae846e1447d995b"
     BUZ = "0x9D44E07C8d1EF2B8d12dBc9A32d908fA3D75D626"
     MRG = "0xE7B3d9797e23B3681109c7C5c608f251005552F9"
@@ -292,9 +293,10 @@ if __name__ == "__main__":
     LOS = "0xc651a1ddbe7f7a4fefdf154d564d9533d60c31b2"
     EME = "0x6128c7d0231b0c3531c25db51611e5e71cc36971"
     T = "0xda4cf25af5551459234cf48044610f23d3e66ca8"
-    # grab_new_blocks(find_new_users=True)
+    BeMoreKind = "0xbdc30613b0de0c072b3b35af4eff7240bd7b6ef4"
+    grab_new_blocks()
     time = datetime.now()
-    generate_wallet_report(RAC)
+    generate_wallet_report(BUZ)
 
 
 

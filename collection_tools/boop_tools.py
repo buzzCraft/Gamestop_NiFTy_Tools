@@ -121,7 +121,7 @@ def run():
     col.get_collection_nfts(limit=col.get_item_count())
     # Generate snapshot for nft_id_list at time = time
     print(f"Generating holders list for {col.metadata['name']}")
-    time = datetime.now()
+    # time = datetime.now()
     get_holders_for_list_at_time(nft_id_list=col.get_nftId_list(), time=time, filename="BOOP_TIERS", export_to_excel=True)
 
 

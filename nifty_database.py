@@ -245,6 +245,15 @@ class NiftyDB:
         else:
             return result
 
+    def get_all_nft_trades(self):
+
+        self.c.execute(f"SELECT * FROM transactions WHERE txType='SpotTrade' ORDER BY blockId")
+        result = self.c.fetchall()
+        if result is None:
+            return None
+        else:
+            return result
+
     def get_nft_data(self, nft_id):
         # nftData has length of 66, tokenId+contractAddress has length of 109, nftId has length, 36
         if len(nft_id) == 66:

@@ -8,7 +8,7 @@ import time
 from random import randint
 
 MAX_INPUT = 13
-
+API_COUNTER = 0
 
 class LoopringAPI:
     def __init__(self):
@@ -131,10 +131,28 @@ class LoopringAPI:
 
     # Gets the block with the given blockId
     def get_block(self, blockId):
+        # Rotate API keys
+        global API_COUNTER
+        current_index = API_COUNTER % len(self.api_keys)
+        API_COUNTER += 1
+        self.lr.headers.update({
+            'X-API-KEY': self.api_keys[current_index]
+        })
         api_url = f"https://api3.loopring.io/api/v3/block/getBlock?id={blockId}"
-        response = self.lr.get(api_url).json()
+        response = self.lr.get(api_url)
+        if response.status_code == 200 or response.status_code == 400:
+            return response.json()
+        else:
+            print(f"Rate blocked - using API key {API_COUNTER % len(self.api_keys)}, sleeping for 1 second")
+            time.sleep(1)
+            response = self.lr.get(api_url)
+            if response.status_code == 200 or response.status_code == 400:
+                return response.json()
+            elif response.status_code == 429:
+                raise Exception(f"Error getting block {blockId} due to rate limiting")
+            else:
+                raise Exception(f"Error getting block {blockId} due to unknown error - {response.status_code}")
 
-        return response
 
     def get_pending(self, spot_trades=True, transfers=True, mints=True):
         api_url = "https://api3.loopring.io/api/v3/block/getPendingRequests"
@@ -186,12 +204,12 @@ class LoopringAPI:
         db = nifty.NiftyDB()
         block_price_eth = db.get_historical_price('ETH', int(blockData['createdAt']/1000))
         block_price_lrc = db.get_historical_price('LRC', int(blockData['createdAt']/1000))
-    #     if block_price_eth is None:
-    #         print(f"Block {blockData['blockId']} has no price data")
-    #         block_price_eth = 1
-    #     if block_price_lrc is None:
-    #         print(f"Block {blockData['blockId']} has no price data")
-    #         block_price_lrc = 1
+        if block_price_eth is None:
+            print(f"Block {blockData['blockId']} has no price data")
+            block_price_eth = 1
+        if block_price_lrc is None:
+            print(f"Block {blockData['blockId']} has no LRC price data")
+            block_price_lrc = 1
 
         print(f"Block {blockData['blockId']} price: ${block_price_eth}")
 
@@ -199,7 +217,8 @@ class LoopringAPI:
         if db.check_if_block_exists(blockData['blockId']) is True:
             print(f"Block {blockData['blockId']} already exists in database")
         else:
-            created = int(blockData['createdAt'] / 1000)
+            created = int(blockData['createdAt'] / 1000) # Timestamp fix
+            # created = int(blockData['createdAt'])
             for tx in blockData['transactions']:
                 if tx['txType'] == 'SpotTrade':
                     # Check to see if transaction was done using LRC

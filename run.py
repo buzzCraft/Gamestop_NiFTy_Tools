@@ -5,6 +5,7 @@ import collection_tools.thedholes_tools as th
 from collection_tools.sleeper_tools import *
 import collection_tools.elite_corp as elite
 import collection_tools.plsty_tools as plsty
+import collection_tools.boop_tools as boop
 
 def get_holders_at_time_for_nft(nftId, timestamp):
 
@@ -90,7 +91,7 @@ def get_time_from_timestamp(timestamp):
     return datetime.fromtimestamp(t, tz=timezone.utc)
 
 
-def data_drop(collection_id, show = True, subfolder = None, time = datetime.now()):
+def data_drop(collection_id, show = False, subfolder = None, time = datetime.now()):
     col = NftCollection(collectionID=collection_id)
     # Scrap the nft_id from the collection
     col.get_collection_nfts(limit=col.get_item_count())
@@ -121,11 +122,24 @@ def morning_routine():
     EVA_NATE = "0cd5edc0-ed69-4b12-8029-8bb7d9328862"
     KIRA_TREE = 	"7ffa3d1a-8d57-44a5-96ce-78842257f10b"
     KIRA_CAN = "59f067fa-2e8b-483d-92c2-262535b5ce42"
+    ZXT = 	"e178826a-ceb8-4353-8624-1228a211054b"
 
     # Emerge
     time = datetime.now()
     print("Starting Emerge")
     emerge.emerge_data(total_holders=True, show=False, subfolder="Emerge")
+
+    zxt = NftCollection(collectionID=ZXT)
+    # Scrap the nft_id from the collection
+    zxt.get_collection_nfts(limit=zxt.get_item_count())
+    # Generate snapshot for nft_id_list at time = time
+    print("Starting ZXT")
+    subfolder = "ZXT"
+    get_holders_for_list_at_time(nft_id_list=zxt.get_nftId_list(), time=time, filename="Zxt Surfer")
+    plot_eth_volume(zxt.get_nftId_list(), [1, 7, 0], save_file=True, show_fig=False, file_name="Zxt Surfer ETH Volume",
+                    subfolder=subfolder)
+    for e in zxt.get_nftId_list():
+        plot_price_history(e, usd=False, show_fig=False, save_file=True, plt_current_floor=True, subfolder=subfolder)
 
     # Thedholes
     Ikar = NftCollection(collectionID=th.TH_IKARUS_ID)
@@ -135,7 +149,7 @@ def morning_routine():
     Vevlvet = NftCollection(collectionID=th.TH_VELVET_ID)
     # Scrap the nft_id from the collection
     Vevlvet.get_collection_nfts(limit=Vevlvet.get_item_count())
-    th.get_holders_for_list_at_time(Vevlvet.get_nftId_list(), time, file_name="Ikarus")
+
 
     combolist = th.TH_LIST
     combolist.extend(Ikar.get_nftId_list())
@@ -177,6 +191,7 @@ def morning_routine():
     data_drop(Kira_BP_COL_ID, show=False, subfolder="Battlepass")
 
     elite.run()
+    elite.airdrop()
 
 
     print("Starting CC")
@@ -193,11 +208,12 @@ def morning_routine():
         plot_price_history(n, usd=True, show_fig=False, save_file=True, plt_current_floor=True, subfolder="CC_CELEBRATION")
     for n in airdrop.get_nftId_list():
         plot_price_history(n, usd=True, show_fig=False, save_file=True, plt_current_floor=True, subfolder="CC_AIRDROP")
+    get_holders_for_list_at_time(nft_id_list=col.get_nftId_list(), time=time, filename="C4_Collection")
 
 
-    # Kick-ass
-    print("Starting KickAss")
-    kickass()
+    # # Kick-ass
+    # print("Starting KickAss")
+    # kickass()
 
 def kickass():
     KICKASS_AIRDROP1= "cacf6464-d9d9-48be-9aac-d0ae81fdf5f1"
@@ -220,14 +236,16 @@ def domi():
 
 
 if __name__ == '__main__':
-
+    from datetime import datetime, timezone
     grab_new_blocks()
     # domi()
     morning_routine()
+    # boop.run()
 
-    # # data_drop(PLS_COLLECTION_ID, show=False, subfolder="PLS")
-
-
+    # combolist = th.TH_LIST
+    # # Set time to feb Feb. 9th 3PM EST 2023
+    # time =  datetime(2023, 2, 9, 20, 0, tzinfo=timezone.utc)
+    # th.get_holders_for_list_at_time(combolist, time, file_name="Snapshot")
 
 
 

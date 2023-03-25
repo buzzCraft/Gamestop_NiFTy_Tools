@@ -3,6 +3,7 @@ from datetime import timezone
 
 
 ELIT_CORP = "55bae9ce-9c03-4a63-a162-3e02659de5c6"
+NEXT_GEN = "b7742618-20d5-4e89-8505-a748f5f09b2f"
 ELIT_CORP_AIR = "dde5c4e6-9ce6-4a72-af4c-52cad986b088"
 XMAS = "13472dc9-1db1-4ba2-b1d9-ea87987e338e"
 GUILD_LIST = ["Sand Fox",  "Hit Beez", "B-Hawkz"]
@@ -106,6 +107,36 @@ def get_holders_for_list_at_time(nft_id_list, time, calculate_sets = False, file
     elif get_df:
         return df
 
+def airdrop():
+    time = datetime.now()
+    print("Running Elite Corp")
+    nft_list = []
+    col = NftCollection(collectionID=ELIT_CORP)
+    # Scrap the nft_id from the collection
+    col.get_collection_nfts(limit=col.get_item_count())
+    col2 = NftCollection(collectionID=ELIT_CORP_AIR)
+    # Scrap the nft_id from the collection
+    col2.get_collection_nfts(limit=col2.get_item_count())
+    # Generate snapshot for nft_id_list at time = time
+    xmas = NftCollection(collectionID=XMAS)
+    # Scrap the nft_id from the collection
+    xmas.get_collection_nfts(limit=xmas.get_item_count())
+    nex = NftCollection(collectionID=NEXT_GEN)
+    # Scrap the nft_id from the collection
+    nex.get_collection_nfts(limit=nex.get_item_count())
+    elites = []
+    elites.extend(col.get_nftId_list())
+    elites.extend(nex.get_nftId_list())
+    elites.extend(col2.get_nftId_list())
+    get_holders_for_list_at_time(nft_id_list=elites, time=time, calculate_sets=False,
+                                 filename="EliteTier", export_to_excel=True)
+    get_holders_for_list_at_time(nft_id_list=nex.get_nftId_list(), time=time, calculate_sets=False,
+                                 filename="Next Gen Holders", export_to_excel=True)
+
+    for nft in nex.get_nftId_list():
+        plot_price_history(nft, usd=True, show_fig=False, save_file=True, plt_current_floor=True, subfolder="Elite Corp")
+
+
 def run():
     print("Running Elite Corp")
     nft_list = []
@@ -119,6 +150,9 @@ def run():
     xmas = NftCollection(collectionID=XMAS)
     # Scrap the nft_id from the collection
     xmas.get_collection_nfts(limit=xmas.get_item_count())
+    nex = NftCollection(collectionID=NEXT_GEN)
+    # Scrap the nft_id from the collection
+    nex.get_collection_nfts(limit=nex.get_item_count())
 
     nft_list.extend(col2.get_nftId_list())
     nft_list.extend(xmas.get_nftId_list())
@@ -126,12 +160,18 @@ def run():
 
     time = datetime.now()
     get_holders_for_list_at_time(nft_id_list=col.get_nftId_list(), time=time, calculate_sets=True,filename="Elite Corp", export_to_excel=True)
-    get_holders_for_list_at_time(nft_id_list=nft_list, time=time, filename="Elite Corp AirDrop + Xmas",
-                                 export_to_excel=True)
-    plot_eth_volume(nft_list+col.get_nftId_list() , [1, 7, 0], show_fig=False,save_file=True, file_name="EliteCorp", subfolder="Elite Corp")
+    # get_holders_for_list_at_time(nft_id_list=nft_list, time=time, filename="Elite Corp AirDrop + Xmas",
+    #                              export_to_excel=True)
+    plot_eth_volume(nft_list+col.get_nftId_list() +nex.get_nftId_list(), [1, 7, 0], show_fig=False,save_file=True, file_name="EliteCorp", subfolder="Elite Corp")
     nft_list.extend(col.get_nftId_list())
     for nft in nft_list:
         plot_price_history(nft, usd=True, show_fig=False, save_file=True, plt_current_floor=True, subfolder="Elite Corp")
+
+    airdrop = []
+    airdrop.extend(col.get_nftId_list())
+    airdrop.extend(nex.get_nftId_list())
+    get_holders_for_list_at_time(nft_id_list=airdrop, time=time, calculate_sets=False,
+                                 filename="Elite and Next", export_to_excel=True)
 
 
 if __name__ == "__main__":
