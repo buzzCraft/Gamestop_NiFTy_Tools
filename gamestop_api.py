@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 import loopring_api as loopring
 from concurrent.futures import ThreadPoolExecutor
-import nifty_database as nifty
+import nifty_database_SQLA as nifty
 import time
 import traceback
 

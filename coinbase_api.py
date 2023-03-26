@@ -180,7 +180,8 @@ class CoinbaseAPI(object):
                                                                          (int(request_volume / max_per_mssg) + 1)))
                     dataset = pd.DataFrame(json.loads(response.text))
                     if not dataset.empty:
-                        # TODO FIX APPEND TO CONCAT
+
+                        # data = pd.concat([data, dataset], ignore_index=True)
                         data = data.append(dataset)
                         time.sleep(randint(0, 2))
                     else:

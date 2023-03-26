@@ -2,7 +2,7 @@ import requests
 from ratelimit import limits, sleep_and_retry
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import gamestop_api
-import nifty_database as nifty
+import nifty_database_SQLA as nifty
 import yaml
 import time
 from random import randint
