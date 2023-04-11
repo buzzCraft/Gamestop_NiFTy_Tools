@@ -239,6 +239,8 @@ def emerge_data(total_holders = True, show = True, time = datetime.now(), subfol
         plot_price_history(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
     for nft in worlds.get_nftId_list():
         plot_price_history(nft, limit_volume=False, save_file=True, show_fig=show,plt_current_floor=True, subfolder=subfolder)
+        nft_list = col.get_nftId_list() + airdrop.get_nftId_list() + xlabel.get_nftId_list() + worlds.get_nftId_list()
+    plot_eth_volume(nft_list, save_file=True, show_fig=show, subfolder=subfolder)
     print("Start exporting holders list")
     if total_holders:
         combo = col.get_nftId_list() + airdrop.get_nftId_list()
@@ -250,6 +252,8 @@ def emerge_data(total_holders = True, show = True, time = datetime.now(), subfol
         get_holders_for_list_at_time(nft_id_list=airdrop.get_nftId_list(), time=time, filename="Emerge Airdrop Ownership")
         get_holders_for_list_at_time(nft_id_list=xlabel.get_nftId_list(), time=time, filename="Emerge Xlabel Ownership")
         get_holders_for_list_at_time(nft_id_list=worlds.get_nftId_list(), time=time, filename="Emerge Worlds Ownership")
+
+
 
 # def data_drop(collection_id, show = True):
 #     col = NftCollection(collectionID=collection_id)

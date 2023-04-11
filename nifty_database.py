@@ -307,6 +307,44 @@ class NiftyDB:
         else:
             return result
 
+    def get_nft_sale_at_time(self, nft_id, timestamp):
+        nftData = self.get_nft_data(nft_id)['nftData']
+        self.c.execute(f"SELECT transactions.*, seller.username as seller, buyer.username as buyer "
+                       f"FROM transactions "
+                       f"INNER JOIN users as seller ON transactions.sellerAccount = seller.accountId "
+                       f"INNER JOIN users AS buyer ON transactions.buyerAccount = buyer.accountId "
+                       f"WHERE transactions.nftData='{nftData}' "
+                       f"AND transactions.createdAt > '{timestamp}' "
+                       f"AND transactions.txType = 'SpotTrade' "
+                       f"ORDER BY transactions.createdAt DESC "
+                       f"LIMIT 1")
+        result = self.c.fetchone()
+        if result is None:
+            return 0,0
+        else:
+            price = result['price']
+            price_usd = result['priceUsd']
+            return price, price_usd
+
+    def get_last_sales_price(self, nft_id):
+        nftData = self.get_nft_data(nft_id)['nftData']
+        self.c.execute(f"SELECT transactions.*, seller.username as seller, buyer.username as buyer "
+                       f"FROM transactions "
+                       f"INNER JOIN users as seller ON transactions.sellerAccount = seller.accountId "
+                       f"INNER JOIN users AS buyer ON transactions.buyerAccount = buyer.accountId "
+                       f"INNER JOIN nfts ON transactions.nftData = nfts.nftData "
+                       f"WHERE transactions.txType='SpotTrade' AND transactions.nftData='{nftData}' "
+                       f"ORDER BY transactions.createdAt DESC "
+                       f"LIMIT 1")
+        result = self.c.fetchone()
+        if result is None:
+            print(f"No transactions found for {nft_id}")
+            return None
+        else:
+            return result
+
+
+
     def get_number_of_tx(self, nftData_List):
         formatted_nftData_List = ', '.join(['"%s"' % w for w in nftData_List])
         query = f"SELECT * FROM transactions WHERE nftData in ({formatted_nftData_List})"

@@ -1,5 +1,4 @@
 from nifty_tools import *
-import plotly.express as px
 
 # Move this to nft_id.py in time
 TH_CYPHER = "451c6523-a22f-4c83-a048-2a4330c3d131"
@@ -9,7 +8,7 @@ TH_BALEXX = "cd2d93df-8abe-4ca6-8a26-b57fe739e5a0"
 TH_FAKE_HEELS = "24150c1f-a8f7-426b-a891-81835d51898a"
 TH_TRYPO = "c88f4160-d5db-471b-84d7-39d906e518b3"
 TH_HEELECTRA = "08ad3dfb-7052-4b09-8f1b-10e81b6b619c"
-TH_KROMA ="538d6b12-059e-46c6-ad92-facf92b4c985"
+TH_KROMA = "538d6b12-059e-46c6-ad92-facf92b4c985"
 CC_KiX = "ff603bac-0454-485e-a590-4137f93b02cc"
 TH_PIXI = "605aa20f-ad1a-4d2e-b900-81e54b5ac655"
 TH_TITA = "330068bf-e968-479c-9924-7cc4cb6a3995"
@@ -21,7 +20,11 @@ TH_VELVET_ID = "0d847cf6-ebec-4d30-8be7-825c2b5703a3"
 TH_FLIPP = "855356cb-a572-49cd-b9ca-aa9b616a8d34"
 EC_NOV = "9cc474fd-cb45-4b81-a7d8-2804a35fa94f"
 EC_CHR = "78e83fe7-32ae-499c-8b91-c9cfc9191e6b"
-TH_LIST = [TH_FAKE_HEELS,TH_CYPHER,TH_TRYPO,TH_DRACPNYA,TH_KOSTIKA,TH_BALEXX, TH_HEELECTRA, TH_KROMA, TH_PIXI, TH_SHARP,TH_DOUB, TH_FLIPP, TH_TITA, CC_KiX,EC_NOV, EC_CHR ,B2K_HEAD]
+EYE_L = "7d34a0cc-2428-47fc-a7bb-dec6a13e7a9a"
+EYE_C = "9c5e4b5f-aec8-4fe9-ad4d-d3d8dfe08fa0"
+TH_LIST = [TH_FAKE_HEELS, TH_CYPHER, TH_TRYPO, TH_DRACPNYA, TH_KOSTIKA, TH_BALEXX, TH_HEELECTRA, TH_KROMA, TH_PIXI,
+           TH_SHARP, TH_DOUB, TH_FLIPP, TH_TITA, CC_KiX, EC_NOV, EC_CHR, B2K_HEAD, EYE_L, EYE_C]
+
 
 def print_user_collection_ownership_TH(nftId_list):
     nf = nifty.NiftyDB()
@@ -49,7 +52,6 @@ def print_user_collection_ownership_TH(nftId_list):
 
     print(owners_dict)
 
-
     final_list = []
     for owner in owners_dict:
         owner_string = f"{owner} ({owners_dict[owner][0]['ownerName']}): "
@@ -75,7 +77,6 @@ def print_user_collection_ownership_TH(nftId_list):
             elif nft['nftId'] == TH_BALEXX:
                 num_ba += int(nft['amount'])
 
-
         total = num_ba + num_cy + num_dr + num_fh + num_ko + num_tr
 
         print(owner_string)
@@ -96,7 +97,6 @@ def print_user_collection_ownership_TH(nftId_list):
 
 
 def get_holders_at_time_for_nft(nftId, timestamp):
-
     db = nifty.NiftyDB()
 
     nft = Nft(nftId)
@@ -124,12 +124,10 @@ def get_holders_at_time_for_nft(nftId, timestamp):
         # Remove holders with 0 balance
         holders_purged = {k: v for k, v in holders.items() if v > 0}
 
-
     return [holders_purged, nft.data["name"]]
 
 
 def get_holders_for_list_at_time(nft_id_list, time, file_name="none", export_to_excel=True, get_df=False):
-
     """
     Take a list of nft_id, and a datetime object and calculate
     holders for that list at that time
@@ -141,7 +139,6 @@ def get_holders_for_list_at_time(nft_id_list, time, file_name="none", export_to_
     name_l = []
 
     for nftId in nft_id_list:
-
         dict, name = get_holders_at_time_for_nft(nftId, time)
 
         name_l.append(name)
@@ -154,7 +151,6 @@ def get_holders_for_list_at_time(nft_id_list, time, file_name="none", export_to_
     df['Sum'] = df.sum(axis=1)
     df.insert(0, 'address', "")
     df.insert(1, 'username', "")
-
 
     for idx, row in df.iterrows():
         user = User(accountId=idx)
@@ -207,11 +203,6 @@ def get_subscription_count(Nft_list, time):
     return x
 
 
-
-
-
-
-
 if __name__ == "__main__":
 
     grab_new_blocks(find_new_users=True)
@@ -222,7 +213,7 @@ if __name__ == "__main__":
     # # plot_tier_list(Nft_list=TH_LIST, days = 3)
     get_holders_for_list_at_time(combolist, time)
     get_subscription_count(combolist, time)
-    plot_eth_volume(combolist,[1,7,0], save_file=True, file_name="ThedHolesEthHist")
+    plot_eth_volume(combolist, [1, 7, 0], save_file=True, file_name="ThedHolesEthHist")
     for e in combolist:
         plot_price_history(e, usd=False, save_file=True)
 
@@ -230,4 +221,3 @@ if __name__ == "__main__":
     Ikar = NftCollection(collectionID=TH_IKARUS_ID)
     # Scrap the nft_id from the collection
     Ikar.get_collection_nfts(limit=Ikar.get_item_count())
-

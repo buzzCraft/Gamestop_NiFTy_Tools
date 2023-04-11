@@ -22,7 +22,7 @@ grab_new_blocks()
 # elite.airdrop()
 # boop.run()
 # # do.run()
-run()
+emerge.emerge_data(total_holders=True, show=False, subfolder="Emerge")
 
 
 

@@ -155,7 +155,15 @@ class NftCollection:
     def get_collection_stats(self):
         api_url = ("https://api.nft.gamestop.com/nft-svc-marketplace/getCollectionStats?"
                    f"collectionId={self.collectionID}")
-        response = requests.get(api_url, headers=self.headers).json()
+        try:
+            response = requests.get(api_url, headers=self.headers).json()
+        except:
+            try:
+                time.sleep(10)
+                response = requests.get(api_url, headers=self.headers).json()
+            except:
+                input("Error getting collection stats, check your internet connection and try again")
+                response = requests.get(api_url, headers=self.headers).json()
         response['floorPrice'] = float(response['floorPrice']) / 10 ** 18
         response['totalVolume'] = float(response['totalVolume']) / 10 ** 18
 
